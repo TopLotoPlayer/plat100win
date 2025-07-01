@@ -337,5 +337,50 @@
       }
     });
   </script>
+
+<button id="googleRegisterBtn">Зарегистрироваться через Google</button>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
+    authDomain: "test-loto-11.firebaseapp.com",
+    projectId: "test-loto-11",
+    storageBucket: "test-loto-11.appspot.com",
+    messagingSenderId: "58439644315",
+    appId: "1:58439644315:web:7f517769d27d0a7510023e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  document.getElementById("googleRegisterBtn").addEventListener("click", () => {
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        const user = result.user;
+
+        // 🔐 Запись в Firestore (если нужно)
+        await setDoc(doc(db, "users", user.uid), {
+          email: user.email,
+          name: user.displayName,
+          createdAt: new Date()
+        });
+
+        alert(`Добро пожаловать, ${user.displayName}!`);
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Ошибка регистрации через Google: " + error.message);
+      });
+  });
+</script>
+
+
+
 </body>
 </html>
