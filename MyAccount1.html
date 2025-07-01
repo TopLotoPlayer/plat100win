@@ -83,5 +83,54 @@
     </div>
     <a href="Play5_100.html" class="account-button"><i>Play 5/100</i></a>
   </div>
+
+
+  <!-- Приветствие + кнопка выхода -->
+  <div id="welcomeMessage" style="margin: 20px; font-style: italic;"></div>
+  <button id="logoutBtn" style="display: none;">Выйти</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
+      authDomain: "test-loto-11.firebaseapp.com",
+      projectId: "test-loto-11",
+      storageBucket: "test-loto-11.appspot.com",
+      messagingSenderId: "58439644315",
+      appId: "1:58439644315:web:7f517769d27d0a7510023e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Отслеживаем авторизацию при загрузке страницы
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Пользователь авторизован
+        document.getElementById("welcomeMessage").textContent = `Привет, ${user.email}!`;
+        document.getElementById("logoutBtn").style.display = "inline-block";
+      } else {
+        // Нет входа — можно перенаправить или скрыть элементы
+        document.getElementById("welcomeMessage").textContent = "Вы не вошли в систему";
+        document.getElementById("logoutBtn").style.display = "none";
+      }
+    });
+
+    // Обработчик выхода
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        alert("Вы вышли из аккаунта");
+        location.reload(); // Или редирект на logIn.html
+      });
+    });
+  </script>
+
+
+
+
+
+
 </body>
 </html>
