@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Draw</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffe600;
+    }
+    .navbar {
+      background-color: black;
+      padding: 10px 20px;
+      border-bottom-left-radius: 50px;
+      display: flex;
+      gap: 15px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-style: italic;
+      font-size: 14px;
+    }
+    .content {
+      border: 3px solid black;
+      border-radius: 35px;
+      width: 600px;
+      margin: 40px auto;
+      padding: 30px 40px;
+      background-color: transparent;
+      text-align: center;
+    }
+    .content h2 {
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    .content p {
+      font-style: italic;
+      margin: 10px 0;
+    }
+    .content a {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: black;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-style: italic;
+      font-size: 16px;
+    }
+    .content a:hover {
+      background-color: #333;
+    }
+    #draw-animation {
+      margin: 20px 0;
+      font-style: italic;
+      min-height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="#">About Us</a>
+    <a href="#">Ongoing Pools</a>
+    <a href="#">Blog</a>
+    <a href="index.html">Home page</a>
+  </div>
+
+  <div class="content">
+    <h2>Live Draw</h2>
+    <p><i>Press to start the draw!</i></p>
+    <a href="#" id="start-draw" class="account-button"><i>Start Draw</i></a>
+    <div id="draw-animation"></div>
+    <p id="winner" style="display: none; font-style: italic;"><i>Winner: [Name]</i></p>
+    <a href="index.html" class="account-button" style="display: none;" id="back-button"><i>Back to Home</i></a>
+  </div>
+
+  <script>
+    const startButton = document.getElementById('start-draw');
+    const animationArea = document.getElementById('draw-animation');
+    const winnerDisplay = document.getElementById('winner');
+    const backButton = document.getElementById('back-button');
+
+    // Список участников (замените на реальные имена)
+    const participants = ['Alex', 'Maria', 'John', 'Anna', 'Peter'];
+    let animationInterval;
+
+    startButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      startButton.style.display = 'none'; // Скрываем кнопку запуска
+      let counter = 0;
+
+      // Анимация
+      animationInterval = setInterval(() => {
+        animationArea.textContent = participants[Math.floor(Math.random() * participants.length)];
+      }, 100);
+
+      // Остановка анимации через 3 секунды
+      setTimeout(() => {
+        clearInterval(animationInterval);
+        const winner = participants[Math.floor(Math.random() * participants.length)];
+        animationArea.textContent = '';
+        winnerDisplay.textContent = `Winner: ${winner}`;
+        winnerDisplay.style.display = 'block';
+        backButton.style.display = 'inline-block';
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
