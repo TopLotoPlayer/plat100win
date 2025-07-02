@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Index Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
@@ -45,6 +45,29 @@
       color: black;
       font-weight: bold;
       text-align: center;
+      margin: 2px 0;
+    }
+    #userInfo span {
+      color: black;
+      margin-bottom: 4px;
+    }
+    #myAccountBtn {
+      margin-top: 6px;
+      background: black;
+      color: #fff000;
+      padding: 6px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    #logoutBtn {
+      margin-top: 6px;
+      background: black;
+      color: #fff000;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
     .bubble {
       position: absolute;
@@ -73,15 +96,6 @@
       text-decoration: none;
       color: black;
     }
-    #logoutBtn {
-      margin-top: 8px;
-      background: #000;
-      color: #fff000;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -93,14 +107,14 @@
       <a href="#blog">Blog</a>
     </div>
 
-    <!-- Контейнер с логином и email -->
     <div id="authArea">
       <div class="auth-buttons" id="authButtons">
         <a href="logIn.html">LOG IN</a>
         <a href="register4.html">CREATE ACCOUNT</a>
       </div>
-      <div id="userInfo" style="display: none;">
+      <div id="userInfo" style="display: none; flex-direction: column; align-items: flex-end;">
         <span id="userEmail"></span>
+        <a href="MyAccount1.html" id="myAccountBtn">My Account</a>
         <button id="logoutBtn">Выйти</button>
       </div>
     </div>
