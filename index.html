@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Page</title>
+  <title>Index Page</title>
   <style>
     body {
       margin: 0;
@@ -30,13 +30,15 @@
       text-decoration: none;
       font-size: 1.2em;
     }
-    .auth-buttons {
+    .auth-buttons, #userInfo {
       background-color: #fff000;
       border-radius: 20px;
       padding: 10px 20px;
       display: flex;
       flex-direction: column;
       font-style: italic;
+      font-weight: bold;
+      align-items: flex-end;
     }
     .auth-buttons a {
       text-decoration: none;
@@ -71,6 +73,15 @@
       text-decoration: none;
       color: black;
     }
+    #logoutBtn {
+      margin-top: 8px;
+      background: #000;
+      color: #fff000;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -81,20 +92,23 @@
       <a href="#pools">Ongoing Pools</a>
       <a href="#blog">Blog</a>
     </div>
-    <div class="auth-buttons">
-      <a href="logIn.html">LOG IN</a>
-      <a href="register4.html">CREATE ACCOUNT</a>
+
+    <!-- Контейнер с логином и email -->
+    <div id="authArea">
+      <div class="auth-buttons" id="authButtons">
+        <a href="logIn.html">LOG IN</a>
+        <a href="register4.html">CREATE ACCOUNT</a>
+      </div>
+      <div id="userInfo" style="display: none;">
+        <span id="userEmail"></span>
+        <button id="logoutBtn">Выйти</button>
+      </div>
     </div>
   </header>
 
   <div class="bubble">
     <a href="HowItWorks.html">how it<br>works?</a>
   </div>
-
-
-  <!-- Приветствие + кнопка выхода -->
-  <div id="welcomeMessage" style="margin: 20px; font-style: italic;"></div>
-  <button id="logoutBtn" style="display: none;">Выйти</button>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -112,24 +126,25 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Отслеживаем авторизацию при загрузке страницы
     onAuthStateChanged(auth, (user) => {
+      const authButtons = document.getElementById("authButtons");
+      const userInfo = document.getElementById("userInfo");
+      const userEmail = document.getElementById("userEmail");
+
       if (user) {
-        // Пользователь авторизован
-        document.getElementById("welcomeMessage").textContent = `Привет, ${user.email}!`;
-        document.getElementById("logoutBtn").style.display = "inline-block";
+        authButtons.style.display = "none";
+        userInfo.style.display = "flex";
+        userEmail.textContent = user.email;
       } else {
-        // Нет входа — можно перенаправить или скрыть элементы
-        document.getElementById("welcomeMessage").textContent = "Вы не вошли в систему";
-        document.getElementById("logoutBtn").style.display = "none";
+        authButtons.style.display = "flex";
+        userInfo.style.display = "none";
+        userEmail.textContent = "";
       }
     });
 
-    // Обработчик выхода
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
-        alert("Вы вышли из аккаунта");
-        location.reload(); // Или редирект на logIn.html
+        window.location.reload();
       });
     });
   </script>

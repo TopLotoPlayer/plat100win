@@ -424,7 +424,58 @@
 </script>
 
 
+<!-- 🔻 Блок авторизации -->
+<div id="authArea">
+  <div class="auth-buttons" id="authButtons" style="background-color:#ffe600; border-radius:12px; padding:10px; font-style:italic; font-weight:bold;">
+    <a href="logIn.html" style="text-decoration:none; color:black;">LOG IN</a><br>
+    <a href="register4.html" style="text-decoration:none; color:black;">CREATE ACCOUNT</a>
+  </div>
 
+  <div id="userInfo" style="display:none; flex-direction:column; align-items:flex-end; background-color:#ffe600; border-radius:12px; padding:10px; font-style:italic; font-weight:bold;">
+    <span id="userEmail" style="color:black;"></span>
+    <button id="logoutBtn" style="margin-top:6px; background:black; color:#ffe600; padding:6px 10px; border:none; border-radius:5px; cursor:pointer;">Выйти</button>
+  </div>
+</div>
+
+<!-- 🔻 Скрипт авторизации -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
+    authDomain: "test-loto-11.firebaseapp.com",
+    projectId: "test-loto-11",
+    storageBucket: "test-loto-11.appspot.com",
+    messagingSenderId: "58439644315",
+    appId: "1:58439644315:web:7f517769d27d0a7510023e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
+    const authButtons = document.getElementById("authButtons");
+    const userInfo = document.getElementById("userInfo");
+    const userEmail = document.getElementById("userEmail");
+
+    if (user) {
+      authButtons.style.display = "none";
+      userInfo.style.display = "flex";
+      userEmail.textContent = user.email;
+    } else {
+      authButtons.style.display = "flex";
+      userInfo.style.display = "none";
+      userEmail.textContent = "";
+    }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    signOut(auth).then(() => {
+      window.location.reload();
+    });
+  });
+</script>
 
 
 </body>

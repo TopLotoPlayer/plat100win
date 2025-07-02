@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,13 +15,43 @@
       padding: 10px 20px;
       border-bottom-left-radius: 50px;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar .links {
+      display: flex;
       gap: 15px;
     }
-    .navbar a {
+    .navbar .links a {
       color: white;
       text-decoration: none;
       font-style: italic;
       font-size: 14px;
+    }
+    .auth-buttons, #userInfo {
+      display: flex;
+      flex-direction: column;
+      background-color: #ffe600;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-style: italic;
+      font-weight: bold;
+      align-items: flex-end;
+    }
+    .auth-buttons a {
+      color: black;
+      text-decoration: none;
+      font-size: 14px;
+      margin: 2px 0;
+    }
+    #logoutBtn {
+      margin-top: 6px;
+      background: black;
+      color: #ffe600;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
     .content {
       border: 3px solid black;
@@ -61,11 +90,25 @@
   </style>
 </head>
 <body>
+
   <div class="navbar">
-    <a href="#">About Us</a>
-    <a href="#">Ongoing Pools</a>
-    <a href="#">Blog</a>
-    <a href="index.html">Home page</a>
+    <div class="links">
+      <a href="#">About Us</a>
+      <a href="#">Ongoing Pools</a>
+      <a href="#">Blog</a>
+      <a href="index.html">Home page</a>
+    </div>
+
+    <div id="authArea">
+      <div class="auth-buttons" id="authButtons">
+        <a href="logIn.html">LOG IN</a>
+        <a href="register4.html">CREATE ACCOUNT</a>
+      </div>
+      <div id="userInfo" style="display: none;">
+        <span id="userEmail"></span>
+        <button id="logoutBtn">Выйти</button>
+      </div>
+    </div>
   </div>
 
   <div class="content">
@@ -74,7 +117,7 @@
       <p><i>Name: Alex Smith</i></p>
       <p><i>Email: alex@example.com</i></p>
       <p><i>Registered: June 20, 2025</i></p>
-      <p><i>Balance: 25 EUR</i></p> <!-- добавлена графа баланса -->
+      <p><i>Balance: 25 EUR</i></p>
     </div>
     <div class="purchase-history">
       <p><i>Purchase History:</i></p>
@@ -83,11 +126,6 @@
     </div>
     <a href="Play5_100.html" class="account-button"><i>Play 5/100</i></a>
   </div>
-
-
-  <!-- Приветствие + кнопка выхода -->
-  <div id="welcomeMessage" style="margin: 20px; font-style: italic;"></div>
-  <button id="logoutBtn" style="display: none;">Выйти</button>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -105,32 +143,27 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Отслеживаем авторизацию при загрузке страницы
     onAuthStateChanged(auth, (user) => {
+      const authButtons = document.getElementById("authButtons");
+      const userInfo = document.getElementById("userInfo");
+      const userEmail = document.getElementById("userEmail");
+
       if (user) {
-        // Пользователь авторизован
-        document.getElementById("welcomeMessage").textContent = `Привет, ${user.email}!`;
-        document.getElementById("logoutBtn").style.display = "inline-block";
+        authButtons.style.display = "none";
+        userInfo.style.display = "flex";
+        userEmail.textContent = user.email;
       } else {
-        // Нет входа — можно перенаправить или скрыть элементы
-        document.getElementById("welcomeMessage").textContent = "Вы не вошли в систему";
-        document.getElementById("logoutBtn").style.display = "none";
+        authButtons.style.display = "flex";
+        userInfo.style.display = "none";
       }
     });
 
-    // Обработчик выхода
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
-        alert("Вы вышли из аккаунта");
-        location.reload(); // Или редирект на logIn.html
+        window.location.href = "logIn.html";
       });
     });
   </script>
-
-
-
-
-
 
 </body>
 </html>
