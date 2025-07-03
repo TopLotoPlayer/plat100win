@@ -171,13 +171,13 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Google Sign-In
+    // Google Sign-In с перенаправлением
     document.getElementById("loginBtn").addEventListener("click", () => {
       signInWithPopup(auth, provider)
         .then((result) => {
           const user = result.user;
           alert(`Добро пожаловать, ${user.displayName || user.email}!`);
-          window.location.reload();
+          window.location.href = 'index.html'; // Перенаправление на index.html
         })
         .catch((error) => {
           console.error(error);
@@ -185,7 +185,7 @@
         });
     });
 
-    // Обновление UI по состоянию авторизации
+    // Проверка состояния авторизации при загрузке страницы
     onAuthStateChanged(auth, (user) => {
       const authButtons = document.getElementById("authButtons");
       const userInfo = document.getElementById("userInfo");
@@ -197,6 +197,8 @@
         userInfo.style.display = "flex";
         userEmail.textContent = user.email;
         if (myAccountBtn) myAccountBtn.style.display = "inline-block";
+        // Перенаправление на index.html, если пользователь уже авторизован
+        window.location.href = 'index.html';
       } else {
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
@@ -209,7 +211,7 @@
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
         alert("Вы вышли из аккаунта");
-        window.location.reload();
+        window.location.href = 'logIn.html'; // Перенаправление на logIn.html после выхода
       });
     });
   </script>
