@@ -99,6 +99,13 @@
     }
 
     .success-message {
+      border: 3px solid black;
+      border-radius: 35px;
+      width: 600px;
+      margin: 40px auto;
+      padding: 30px 40px;
+      background-color: transparent;
+      text-align: center;
       display: none;
     }
 
@@ -141,6 +148,23 @@
       font-size: 13px;
       margin-top: 5px;
       text-align: left;
+    }
+
+    /* Стиль для кнопки Google */
+    .google-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      font-style: italic;
+    }
+
+    .google-button:hover {
+      background-color: #357abd;
     }
   </style>
 </head>
@@ -220,133 +244,138 @@
       </div>
     </div>
 
-    <div class="success-message" id="success-message">
+    <button id="googleRegisterBtn" class="google-button">Зарегистрироваться через Google</button>
+  </div>
+
+  <div class="success-message" id="success-message">
     <h2>Account registered</h2>
     <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
       <a href="MyAccount1.html" class="account-button">My account</a>
-      <a href="index.html" class="account-button">Back to Home</a>
-      <a href="Play5_100.html" class="account-button">Play 5/100</a>
     </div>
   </div>
 
   <script>
-    // Функция для проверки пароля
-    function validatePassword(password) {
-      const lengthValid = password.length >= 8;
-      const uppercaseValid = /[A-Z]/.test(password);
-      const lowercaseValid = /[a-z]/.test(password);
-      const digitValid = /[0-9]/.test(password);
-      const specialValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-      return {
-        isValid: lengthValid && uppercaseValid && lowercaseValid && digitValid && specialValid,
-        issues: {
-          length: !lengthValid,
-          uppercase: !uppercaseValid,
-          lowercase: !lowercaseValid,
-          digit: !digitValid,
-          special: !specialValid
+    document.addEventListener('DOMContentLoaded', () => {
+      // Функция для проверки пароля
+      function validatePassword(password) {
+        const lengthValid = password.length >= 8;
+        const uppercaseValid = /[A-Z]/.test(password);
+        const lowercaseValid = /[a-z]/.test(password);
+        const digitValid = /[0-9]/.test(password);
+        const specialValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        return {
+          isValid: lengthValid && uppercaseValid && lowercaseValid && digitValid && specialValid,
+          issues: {
+            length: !lengthValid,
+            uppercase: !uppercaseValid,
+            lowercase: !lowercaseValid,
+            digit: !digitValid,
+            special: !specialValid
+          }
+        };
+      }
+
+      // Функция для проверки возраста
+      function validateAge(dob) {
+        const today = new Date(); // Текущая дата в момент регистрации
+        const birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
         }
-      };
-    }
-
-    // Функция для проверки возраста
-    function validateAge(dob) {
-      const today = new Date(); // Текущая дата в момент регистрации
-      const birthDate = new Date(dob);
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const monthDiff = today.getMonth() - birthDate.getMonth();
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-      }
-      return age >= 18;
-    }
-
-    // Обработчик ввода
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirm-password');
-    const dobInput = document.getElementById('dob');
-    const passwordError = document.getElementById('password-error');
-    const confirmPasswordError = document.getElementById('confirm-password-error');
-    const dobError = document.getElementById('dob-error');
-    const passwordGroup = document.getElementById('password-group');
-    const confirmPasswordGroup = document.getElementById('confirm-password-group');
-    const dobGroup = document.getElementById('dob-group');
-
-    function checkInputs() {
-      const password = passwordInput.value;
-      const confirmPassword = confirmPasswordInput.value;
-      const dob = dobInput.value;
-      const validation = validatePassword(password);
-
-      // Сброс стилей
-      passwordGroup.classList.remove('input-error');
-      confirmPasswordGroup.classList.remove('input-error');
-      dobGroup.classList.remove('input-error');
-      passwordError.style.display = 'none';
-      confirmPasswordError.style.display = 'none';
-      dobError.style.display = 'none';
-
-      // Проверка пароля
-      if (!validation.isValid) {
-        passwordGroup.classList.add('input-error');
-        passwordError.style.display = 'block';
-        passwordError.textContent = 'Your password does not meet the requirements';
+        return age >= 18;
       }
 
-      // Проверка совпадения паролей
-      if (confirmPassword && password !== confirmPassword) {
-        confirmPasswordGroup.classList.add('input-error');
-        confirmPasswordError.style.display = 'block';
-        confirmPasswordError.textContent = 'Passwords do not match';
-      }
+      // Обработчик ввода
+      const passwordInput = document.getElementById('password');
+      const confirmPasswordInput = document.getElementById('confirm-password');
+      const dobInput = document.getElementById('dob');
+      const passwordError = document.getElementById('password-error');
+      const confirmPasswordError = document.getElementById('confirm-password-error');
+      const dobError = document.getElementById('dob-error');
+      const passwordGroup = document.getElementById('password-group');
+      const confirmPasswordGroup = document.getElementById('confirm-password-group');
+      const dobGroup = document.getElementById('dob-group');
+      const registrationBox = document.querySelector('.registration-box');
+      const googleRegisterBtn = document.getElementById('googleRegisterBtn');
+      const successMessage = document.getElementById('success-message');
 
-      // Проверка возраста
-      if (dob && !validateAge(dob)) {
-        dobGroup.classList.add('input-error');
-        dobError.style.display = 'block';
-        dobError.textContent = 'You must be at least 18 years old';
-      }
-
-      return validation.isValid && (confirmPassword === '' || password === confirmPassword) && (dob === '' || validateAge(dob));
-    }
-
-    // Проверка при вводе
-    passwordInput.addEventListener('input', checkInputs);
-    confirmPasswordInput.addEventListener('input', checkInputs);
-    dobInput.addEventListener('change', checkInputs); // Проверка при выборе даты
-
-    // Показываем поле для кода при клике на ссылку
-    document.getElementById('verify-link').addEventListener('click', function(e) {
-      e.preventDefault();
-
-      if (!checkInputs()) {
+      if (!registrationBox || !googleRegisterBtn || !successMessage) {
+        console.error('One or more elements not found:', {
+          registrationBox,
+          googleRegisterBtn,
+          successMessage
+        });
         return;
       }
 
-      document.getElementById('verification-code').style.display = 'block';
-    });
+      function checkInputs() {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+        const dob = dobInput.value;
+        const validation = validatePassword(password);
 
-    // Проверяем введённый код
-    document.getElementById('code').addEventListener('input', function() {
-      const code = this.value;
-      if (code === '1234') { // Условный код
-        // Скрываем форму
-        document.getElementById('username-group').style.display = 'none';
-        document.getElementById('firstname-group').style.display = 'none';
-        document.getElementById('secondname-group').style.display = 'none';
-        document.getElementById('email-group').style.display = 'none';
-        document.getElementById('password-group').style.display = 'none';
-        document.getElementById('confirm-password-group').style.display = 'none';
-        document.getElementById('dob-group').style.display = 'none';
-        document.getElementById('verify-link-container').style.display = 'none';
-        document.getElementById('verification-code').style.display = 'none';
-        // Показываем успех
-        document.getElementById('success-message').style.display = 'block';
+        // Сброс стилей
+        passwordGroup.classList.remove('input-error');
+        confirmPasswordGroup.classList.remove('input-error');
+        dobGroup.classList.remove('input-error');
+        passwordError.style.display = 'none';
+        confirmPasswordError.style.display = 'none';
+        dobError.style.display = 'none';
+
+        // Проверка пароля
+        if (!validation.isValid) {
+          passwordGroup.classList.add('input-error');
+          passwordError.style.display = 'block';
+          passwordError.textContent = 'Your password does not meet the requirements';
+        }
+
+        // Проверка совпадения паролей
+        if (confirmPassword && password !== confirmPassword) {
+          confirmPasswordGroup.classList.add('input-error');
+          confirmPasswordError.style.display = 'block';
+          confirmPasswordError.textContent = 'Passwords do not match';
+        }
+
+        // Проверка возраста
+        if (dob && !validateAge(dob)) {
+          dobGroup.classList.add('input-error');
+          dobError.style.display = 'block';
+          dobError.textContent = 'You must be at least 18 years old';
+        }
+
+        return validation.isValid && (confirmPassword === '' || password === confirmPassword) && (dob === '' || validateAge(dob));
       }
+
+      // Проверка при вводе
+      passwordInput.addEventListener('input', checkInputs);
+      confirmPasswordInput.addEventListener('input', checkInputs);
+      dobInput.addEventListener('change', checkInputs); // Проверка при выборе даты
+
+      // Показываем поле для кода при клике на ссылку
+      document.getElementById('verify-link').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        if (!checkInputs()) {
+          return;
+        }
+
+        document.getElementById('verification-code').style.display = 'block';
+      });
+
+      // Проверяем введённый код
+      document.getElementById('code').addEventListener('input', function() {
+        const code = this.value;
+        if (code === '1234') { // Условный код
+          // Скрываем форму и ненужные элементы
+          registrationBox.style.display = 'none';
+          // Показываем сообщение об успехе
+          successMessage.style.display = 'block';
+        }
+      });
     });
   </script>
-
-  <button id="googleRegisterBtn">Зарегистрироваться через Google</button>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -388,86 +417,7 @@
     });
   </script>
 
-  <!-- Приветствие + кнопка выхода -->
-  <div id="welcomeMessage" style="margin: 20px; font-style: italic;"></div>
-  <button id="logoutBtn" style="display: none;">Выйти</button>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
-      authDomain: "test-loto-11.firebaseapp.com",
-      projectId: "test-loto-11",
-      storageBucket: "test-loto-11.appspot.com",
-      messagingSenderId: "58439644315",
-      appId: "1:58439644315:web:7f517769d27d0a7510023e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // Отслеживаем авторизацию при загрузке страницы
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // Пользователь авторизован
-        document.getElementById("welcomeMessage").textContent = `Привет, ${user.email}!`;
-        document.getElementById("logoutBtn").style.display = "inline-block";
-      } else {
-        // Нет входа — можно перенаправить или скрыть элементы
-        document.getElementById("welcomeMessage").textContent = "Вы не вошли в систему";
-        document.getElementById("logoutBtn").style.display = "none";
-      }
-    });
-
-    // Обработчик выхода
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        alert("Вы вышли из аккаунта");
-        location.reload(); // Или редирект на logIn.html
-      });
-    });
-  </script>
-
   <!-- 🔻 Скрипт авторизации -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
-      authDomain: "test-loto-11.firebaseapp.com",
-      projectId: "test-loto-11",
-      storageBucket: "test-loto-11.appspot.com",
-      messagingSenderId: "58439644315",
-      appId: "1:58439644315:web:7f517769d27d0a7510023e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-      const authButtons = document.getElementById("authButtons");
-      const userInfo = document.getElementById("userInfo");
-      const userEmail = document.getElementById("userEmail");
-
-      if (user) {
-        userInfo.style.display = "flex";
-        userEmail.textContent = user.email;
-      } else {
-        userInfo.style.display = "none";
-        userEmail.textContent = "";
-      }
-    });
-
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        window.location.reload();
-      });
-    });
-  </script>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
