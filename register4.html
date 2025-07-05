@@ -8,10 +8,8 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
-      background-color: #ffe600; /* жёлтый фон */
+      background-color: #ffe600;
     }
-
-    /* Верхнее меню */
     .navbar {
       background-color: black;
       padding: 10px 20px;
@@ -19,15 +17,12 @@
       display: flex;
       gap: 15px;
     }
-
     .navbar a {
       color: white;
       text-decoration: none;
       font-style: italic;
       font-size: 14px;
     }
-
-    /* Блок формы */
     .registration-box {
       border: 3px solid black;
       border-radius: 35px;
@@ -37,67 +32,33 @@
       background-color: transparent;
       text-align: center;
     }
-
     .registration-box h2 {
       font-style: italic;
       margin-bottom: 25px;
     }
-
-    /* Стили полей и подписей */
     .form-group {
       display: block;
       margin-top: 15px;
       text-align: left;
     }
-
     .form-group label {
       font-style: italic;
     }
-
     .form-group input {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
       border: 1px solid #333;
       box-sizing: border-box;
-      transition: border-color 0.3s ease;
     }
-
-    .form-group.input-error input {
-      border-color: red;
-    }
-
-    .verify {
-      margin-top: 20px;
+    .error-message {
+      display: none;
+      color: red;
       font-style: italic;
       font-size: 13px;
-      text-align: center;
-      text-decoration: underline;
-    }
-
-    .verification-code {
-      display: none;
-      margin-top: 15px;
+      margin-top: 5px;
       text-align: left;
     }
-
-    .verification-code label {
-      font-style: italic;
-    }
-
-    .verification-links {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 13px;
-    }
-
-    .verification-links a {
-      font-style: italic;
-      text-decoration: underline;
-      margin: 0 10px;
-      color: black;
-    }
-
     .success-message {
       border: 3px solid black;
       border-radius: 35px;
@@ -108,12 +69,6 @@
       text-align: center;
       display: none;
     }
-
-    .success-message h2 {
-      font-style: italic;
-      margin-bottom: 25px;
-    }
-
     .account-button {
       display: inline-block;
       padding: 12px 25px;
@@ -121,36 +76,9 @@
       color: white;
       text-decoration: none;
       border-radius: 5px;
-      font-family: Arial, sans-serif;
       font-style: italic;
       font-size: 16px;
     }
-
-    .account-button:hover {
-      background-color: #333;
-    }
-
-    /* Убираем стрелки у поля ввода, сохраняя размер */
-    .verification-code input {
-      -moz-appearance: textfield;
-    }
-    .verification-code input::-webkit-outer-spin-button,
-    .verification-code input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    /* Стиль для уведомления об ошибке */
-    .error-message {
-      display: none;
-      color: red;
-      font-style: italic;
-      font-size: 13px;
-      margin-top: 5px;
-      text-align: left;
-    }
-
-    /* Стиль для кнопки Google */
     .google-button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -159,228 +87,80 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-family: Arial, sans-serif;
       font-style: italic;
-    }
-
-    .google-button:hover {
-      background-color: #357abd;
     }
   </style>
 </head>
 <body>
 
   <div class="navbar">
-    <div class="left">
-      <a href="index.html">Home</a>
-    </div>
-    <div id="authArea">
-      <div id="userInfo" style="display: none; flex-direction: column; align-items: flex-end;">
-        <span id="userEmail" style="color: black; font-style: italic;"></span>
-        <a href="MyAccount1.html" id="myAccountBtn" style="margin-top: 6px; display: none; background: black; color: #ffe600; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-weight: bold;">My Account</a>
-        <button id="logoutBtn" style="margin-top: 6px; background: black; color: #ffe600; padding: 6px 10px; border: none; border-radius: 5px; cursor: pointer;">Выйти</button>
-      </div>
-    </div>
+    <a href="index.html">Home</a>
   </div>
 
   <div class="registration-box">
     <h2>Complete the registration</h2>
 
-    <div class="form-group" id="username-group">
-      <label for="username"><i>Username</i></label>
-      <input type="text" id="username" placeholder="Enter your username">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="username" />
     </div>
 
-    <div class="form-group" id="firstname-group">
-      <label for="firstname"><i>First name</i></label>
-      <input type="text" id="firstname" placeholder="Enter your first name">
+    <div class="form-group">
+      <label>First name</label>
+      <input type="text" id="firstname" />
     </div>
 
-    <div class="form-group" id="secondname-group">
-      <label for="secondname"><i>Second name</i></label>
-      <input type="text" id="secondname" placeholder="Enter your secondname">
+    <div class="form-group">
+      <label>Second name</label>
+      <input type="text" id="secondname" />
     </div>
 
-    <div class="form-group" id="email-group">
-      <label for="email"><i>Email address</i></label>
-      <input type="email" id="email" placeholder="Enter your email">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="email" />
     </div>
 
-    <div class="form-group" id="password-group">
-      <label for="password"><i>Enter the password</i></label>
-      <input type="password" id="password" placeholder="Create the password">
-      <ul id="password-rules" style="font-size: 13px; font-style: italic; margin-top: 10px; padding-left: 18px;">
-        <li id="length">• Minimum 8 characters</li>
-        <li id="uppercase">• At least one uppercase letter</li>
-        <li id="lowercase">• At least one lowercase letter</li>
-        <li id="digit">• At least one number</li>
-        <li id="special">• At least one special character (!@#$...)</li>
-      </ul>
-      <div id="password-error" class="error-message"></div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" />
     </div>
 
-    <div class="form-group" id="confirm-password-group">
-      <label for="confirm-password"><i>Confirm the password</i></label>
-      <input type="password" id="confirm-password" placeholder="Confirm the password">
-      <div id="confirm-password-error" class="error-message"></div>
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" id="confirm-password" />
     </div>
 
-    <div class="form-group" id="dob-group">
-      <label for="dob"><i>Date of birth</i></label>
-      <input type="date" id="dob">
-      <div id="dob-error" class="error-message"></div>
+    <div class="form-group">
+      <label>Date of Birth</label>
+      <input type="date" id="dob" />
     </div>
 
-    <div class="verify" id="verify-link-container">
-      <a href="#" id="verify-link">Verify your email by entering the code provided in the email</a>
-    </div>
+    <div class="error-message" id="error-message"></div>
 
-    <div class="verification-code" id="verification-code">
-      <label for="code"><i>Verification code</i></label>
-      <input type="text" id="code" placeholder="Enter the code">
-      <div class="verification-links">
-        <a href="#">Didn't get code?</a>
-        <a href="#">Resend the code</a>
-      </div>
-    </div>
-
+    <button id="registerBtn">Create Account</button>
     <button id="googleRegisterBtn" class="google-button">Зарегистрироваться через Google</button>
   </div>
 
   <div class="success-message" id="success-message">
-    <h2>Account registered</h2>
-    <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
-      <a href="MyAccount1.html" class="account-button">My account</a>
-    </div>
+    <h2>Check your email</h2>
+    <p>We’ve sent you a confirmation link. Please click it to activate your account.</p>
+    <a href="index.html" class="account-button">Go to main page</a>
   </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Функция для проверки пароля
-      function validatePassword(password) {
-        const lengthValid = password.length >= 8;
-        const uppercaseValid = /[A-Z]/.test(password);
-        const lowercaseValid = /[a-z]/.test(password);
-        const digitValid = /[0-9]/.test(password);
-        const specialValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-        return {
-          isValid: lengthValid && uppercaseValid && lowercaseValid && digitValid && specialValid,
-          issues: {
-            length: !lengthValid,
-            uppercase: !uppercaseValid,
-            lowercase: !lowercaseValid,
-            digit: !digitValid,
-            special: !specialValid
-          }
-        };
-      }
-
-      // Функция для проверки возраста
-      function validateAge(dob) {
-        const today = new Date(); // Текущая дата в момент регистрации
-        const birthDate = new Date(dob);
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-          age--;
-        }
-        return age >= 18;
-      }
-
-      // Обработчик ввода
-      const passwordInput = document.getElementById('password');
-      const confirmPasswordInput = document.getElementById('confirm-password');
-      const dobInput = document.getElementById('dob');
-      const passwordError = document.getElementById('password-error');
-      const confirmPasswordError = document.getElementById('confirm-password-error');
-      const dobError = document.getElementById('dob-error');
-      const passwordGroup = document.getElementById('password-group');
-      const confirmPasswordGroup = document.getElementById('confirm-password-group');
-      const dobGroup = document.getElementById('dob-group');
-      const registrationBox = document.querySelector('.registration-box');
-      const googleRegisterBtn = document.getElementById('googleRegisterBtn');
-      const successMessage = document.getElementById('success-message');
-
-      if (!registrationBox || !googleRegisterBtn || !successMessage) {
-        console.error('One or more elements not found:', {
-          registrationBox,
-          googleRegisterBtn,
-          successMessage
-        });
-        return;
-      }
-
-      function checkInputs() {
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-        const dob = dobInput.value;
-        const validation = validatePassword(password);
-
-        // Сброс стилей
-        passwordGroup.classList.remove('input-error');
-        confirmPasswordGroup.classList.remove('input-error');
-        dobGroup.classList.remove('input-error');
-        passwordError.style.display = 'none';
-        confirmPasswordError.style.display = 'none';
-        dobError.style.display = 'none';
-
-        // Проверка пароля
-        if (!validation.isValid) {
-          passwordGroup.classList.add('input-error');
-          passwordError.style.display = 'block';
-          passwordError.textContent = 'Your password does not meet the requirements';
-        }
-
-        // Проверка совпадения паролей
-        if (confirmPassword && password !== confirmPassword) {
-          confirmPasswordGroup.classList.add('input-error');
-          confirmPasswordError.style.display = 'block';
-          confirmPasswordError.textContent = 'Passwords do not match';
-        }
-
-        // Проверка возраста
-        if (dob && !validateAge(dob)) {
-          dobGroup.classList.add('input-error');
-          dobError.style.display = 'block';
-          dobError.textContent = 'You must be at least 18 years old';
-        }
-
-        return validation.isValid && (confirmPassword === '' || password === confirmPassword) && (dob === '' || validateAge(dob));
-      }
-
-      // Проверка при вводе
-      passwordInput.addEventListener('input', checkInputs);
-      confirmPasswordInput.addEventListener('input', checkInputs);
-      dobInput.addEventListener('change', checkInputs); // Проверка при выборе даты
-
-      // Показываем поле для кода при клике на ссылку
-      document.getElementById('verify-link').addEventListener('click', function(e) {
-        e.preventDefault();
-
-        if (!checkInputs()) {
-          return;
-        }
-
-        document.getElementById('verification-code').style.display = 'block';
-      });
-
-      // Проверяем введённый код
-      document.getElementById('code').addEventListener('input', function() {
-        const code = this.value;
-        if (code === '1234') { // Условный код
-          // Скрываем форму и ненужные элементы
-          registrationBox.style.display = 'none';
-          // Показываем сообщение об успехе
-          successMessage.style.display = 'block';
-        }
-      });
-    });
-  </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      sendEmailVerification,
+      GoogleAuthProvider,
+      signInWithPopup
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
@@ -396,66 +176,67 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
+    document.getElementById("registerBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirm = document.getElementById("confirm-password").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const firstname = document.getElementById("firstname").value.trim();
+      const secondname = document.getElementById("secondname").value.trim();
+      const dob = document.getElementById("dob").value;
+
+      const errorBox = document.getElementById("error-message");
+
+      if (!email || !password || !confirm || !username || !dob) {
+        errorBox.textContent = "⚠️ Пожалуйста, заполните все поля";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      if (password !== confirm) {
+        errorBox.textContent = "🚫 Пароли не совпадают";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+          email,
+          username,
+          firstname,
+          secondname,
+          dob,
+          createdAt: new Date()
+        });
+
+        await sendEmailVerification(user);
+        document.querySelector(".registration-box").style.display = "none";
+        document.getElementById("success-message").style.display = "block";
+      } catch (error) {
+        errorBox.textContent = error.message;
+        errorBox.style.display = "block";
+        console.error(error);
+      }
+    });
+
     document.getElementById("googleRegisterBtn").addEventListener("click", () => {
       signInWithPopup(auth, provider)
         .then(async (result) => {
           const user = result.user;
-
-          // 🔐 Запись в Firestore (если нужно)
           await setDoc(doc(db, "users", user.uid), {
             email: user.email,
             name: user.displayName,
             createdAt: new Date()
           });
-
-          alert(`Добро пожаловать, ${user.displayName}!`);
+          alert(`Добро пожаловать, ${user.displayName || user.email}!`);
         })
         .catch((error) => {
-          console.error(error);
-          alert("Ошибка регистрации через Google: " + error.message);
+          alert("Ошибка входа через Google: " + error.message);
         });
     });
   </script>
-
-  <!-- 🔻 Скрипт авторизации -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
-      authDomain: "test-loto-11.firebaseapp.com",
-      projectId: "test-loto-11",
-      storageBucket: "test-loto-11.appspot.com",
-      messagingSenderId: "58439644315",
-      appId: "1:58439644315:web:7f517769d27d0a7510023e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-      const userInfo = document.getElementById("userInfo");
-      const userEmail = document.getElementById("userEmail");
-      const myAccountBtn = document.getElementById("myAccountBtn");
-
-      if (user) {
-        userInfo.style.display = "flex";
-        userEmail.textContent = user.email;
-        if (myAccountBtn) myAccountBtn.style.display = "inline-block";
-      } else {
-        userInfo.style.display = "none";
-        userEmail.textContent = "";
-        if (myAccountBtn) myAccountBtn.style.display = "none";
-      }
-    });
-
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        window.location.reload();
-      });
-    });
-  </script>
-
 </body>
 </html>
