@@ -155,35 +155,8 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      sendEmailVerification,
-      GoogleAuthProvider,
-      signInWithPopup
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      setDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
-      authDomain: "test-loto-11.firebaseapp.com",
-      projectId: "test-loto-11",
-      storageBucket: "test-loto-11.appspot.com",
-      messagingSenderId: "58439644315",
-      appId: "1:58439644315:web:7f517769d27d0a7510023e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-
-    document.getElementById("registerBtn").addEventListener("click", async () => {
+    // Удалён код Firebase
+    document.getElementById("registerBtn").addEventListener("click", () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
       const confirm = document.getElementById("confirm-password").value.trim();
@@ -206,43 +179,13 @@
         return;
       }
 
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        await setDoc(doc(db, "users", user.uid), {
-          email,
-          username,
-          firstname,
-          secondname,
-          dob,
-          createdAt: new Date()
-        });
-
-        await sendEmailVerification(user);
-        document.querySelector(".registration-box").style.display = "none";
-        document.getElementById("success-message").style.display = "block";
-      } catch (error) {
-        errorBox.textContent = error.message;
-        errorBox.style.display = "block";
-        console.error(error);
-      }
+      // Логика регистрации заменяется на Supabase позже
+      errorBox.textContent = "Регистрация временно отключена. Настройте Supabase.";
+      errorBox.style.display = "block";
     });
 
     document.getElementById("googleRegisterBtn").addEventListener("click", () => {
-      signInWithPopup(auth, provider)
-        .then(async (result) => {
-          const user = result.user;
-          await setDoc(doc(db, "users", user.uid), {
-            email: user.email,
-            name: user.displayName,
-            createdAt: new Date()
-          });
-          alert(`Добро пожаловать, ${user.displayName || user.email}!`);
-        })
-        .catch((error) => {
-          alert("Ошибка входа через Google: " + error.message);
-        });
+      alert("Вход через Google отключён. Настройте альтернативный метод.");
     });
   </script>
 </body>

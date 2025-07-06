@@ -128,40 +128,17 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    // Удалён код Firebase
+    console.log("Firebase-логика удалена. Настройте Supabase для авторизации.");
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
-      authDomain: "test-loto-11.firebaseapp.com",
-      projectId: "test-loto-11",
-      storageBucket: "test-loto-11.appspot.com",
-      messagingSenderId: "58439644315",
-      appId: "1:58439644315:web:7f517769d27d0a7510023e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-      const authButtons = document.getElementById("authButtons");
-      const userInfo = document.getElementById("userInfo");
-      const userEmail = document.getElementById("userEmail");
-
-      if (user) {
-        authButtons.style.display = "none";
-        userInfo.style.display = "flex";
-        userEmail.textContent = user.email;
-      } else {
-        authButtons.style.display = "flex";
-        userInfo.style.display = "none";
-      }
-    });
+    // Временная заглушка для отображения пользовательской информации
+    const authButtons = document.getElementById("authButtons");
+    const userInfo = document.getElementById("userInfo");
+    authButtons.style.display = "flex";
+    userInfo.style.display = "none";
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        window.location.href = "logIn.html";
-      });
+      alert("Выход отключён. Настройте Supabase для выхода.");
     });
   </script>
 

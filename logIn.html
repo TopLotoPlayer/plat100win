@@ -149,70 +149,21 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getAuth,
-      GoogleAuthProvider,
-      signInWithPopup,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    // Удалён код Firebase
+    console.log("Firebase-логика удалена. Настройте Supabase для авторизации.");
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
-      authDomain: "test-loto-11.firebaseapp.com",
-      projectId: "test-loto-11",
-      storageBucket: "test-loto-11.appspot.com",
-      messagingSenderId: "58439644315",
-      appId: "1:58439644315:web:7f517769d27d0a7510023e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    // Google Sign-In с перенаправлением
     document.getElementById("loginBtn").addEventListener("click", () => {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          const user = result.user;
-          alert(`Добро пожаловать, ${user.displayName || user.email}!`);
-          window.location.href = 'index.html'; // Перенаправление на index.html
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("Ошибка авторизации");
-        });
+      alert("Вход через Google отключён. Настройте альтернативный метод.");
     });
 
-    // Проверка состояния авторизации при загрузке страницы
-    onAuthStateChanged(auth, (user) => {
-      const authButtons = document.getElementById("authButtons");
-      const userInfo = document.getElementById("userInfo");
-      const userEmail = document.getElementById("userEmail");
-      const myAccountBtn = document.getElementById("myAccountBtn");
+    // Временная заглушка для отображения пользовательской информации
+    const authButtons = document.getElementById("authButtons");
+    const userInfo = document.getElementById("userInfo");
+    authButtons.style.display = "flex";
+    userInfo.style.display = "none";
 
-      if (user) {
-        authButtons.style.display = "none";
-        userInfo.style.display = "flex";
-        userEmail.textContent = user.email;
-        if (myAccountBtn) myAccountBtn.style.display = "inline-block";
-        // Перенаправление на index.html, если пользователь уже авторизован
-        window.location.href = 'index.html';
-      } else {
-        authButtons.style.display = "flex";
-        userInfo.style.display = "none";
-        userEmail.textContent = "";
-        if (myAccountBtn) myAccountBtn.style.display = "none";
-      }
-    });
-
-    // Кнопка выхода
     document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        alert("Вы вышли из аккаунта");
-        window.location.href = 'logIn.html'; // Перенаправление на logIn.html после выхода
-      });
+      alert("Выход отключён. Настройте Supabase для выхода.");
     });
   </script>
 
