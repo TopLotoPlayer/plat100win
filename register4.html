@@ -155,8 +155,35 @@
   </div>
 
   <script type="module">
-    // Удалён код Firebase
-    document.getElementById("registerBtn").addEventListener("click", () => {
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      sendEmailVerification,
+      GoogleAuthProvider,
+      signInWithPopup
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDs_d2wciY6Zzw49H3uOJfxNeSxnSBhVWQ",
+      authDomain: "test-loto-11.firebaseapp.com",
+      projectId: "test-loto-11",
+      storageBucket: "test-loto-11.appspot.com",
+      messagingSenderId: "58439644315",
+      appId: "1:58439644315:web:7f517769d27d0a7510023e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    document.getElementById("registerBtn").addEventListener("click", async () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
       const confirm = document.getElementById("confirm-password").value.trim();
@@ -179,35 +206,116 @@
         return;
       }
 
-      // Логика регистрации заменяется на Supabase позже
-      errorBox.textContent = "Регистрация временно отключена. Настройте Supabase.";
-      errorBox.style.display = "block";
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+          email,
+          username,
+          firstname,
+          secondname,
+          dob,
+          createdAt: new Date()
+        });
+
+        await sendEmailVerification(user);
+        document.querySelector(".registration-box").style.display = "none";
+        document.getElementById("success-message").style.display = "block";
+      } catch (error) {
+        errorBox.textContent = error.message;
+        errorBox.style.display = "block";
+        console.error(error);
+      }
     });
 
     document.getElementById("googleRegisterBtn").addEventListener("click", () => {
-      alert("Вход через Google отключён. Настройте альтернативный метод.");
+      signInWithPopup(auth, provider)
+        .then(async (result) => {
+          const user = result.user;
+          await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            name: user.displayName,
+            createdAt: new Date()
+          });
+          alert(`Добро пожаловать, ${user.displayName || user.email}!`);
+        })
+        .catch((error) => {
+          alert("Ошибка входа через Google: " + error.message);
+        });
     });
   </script>
 
-  <!-- Подключаем библиотеку Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Подключение Supabase и проверка соединения -->
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-  <!-- Настраиваем соединение с Supabase -->
-  <script>
-    const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
-    const supabaseKey = 'вставь_сюда_свой_anon_ключ'; // смотри в том же разделе под Project URL
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-  </script>
+  const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ← вставь сюда полностью свой актуальный anon ключ
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
+  const errorBox = document.getElementById("error-message");
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  // Проверка соединения при загрузке
+  supabase.auth.getSession().then(({ data: { session }, error }) => {
+    if (error) {
+      console.error('❌ Ошибка подключения к Supabase:', error.message);
+    } else if (session) {
+      console.log('✅ Есть соединение! Пользователь вошёл:', session.user.email);
+    } else {
+      console.log('✅ Supabase подключён. Пользователь не авторизован.');
+    }
+  });
 
-  <script>
-    const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1bWlobmF6bmt5c2NkZmNqaHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NTc3NDYsImV4cCI6MjA2NzMzMzc0Nn0._K9jfOPU01F4kUT20kIDHdbLdYh7hHUXZdp4Hn7-EIw';
+  // Обработка кнопки регистрации
+  document.getElementById("registerBtn").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirm = document.getElementById("confirm-password").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const firstname = document.getElementById("firstname").value.trim();
+    const secondname = document.getElementById("secondname").value.trim();
+    const dob = document.getElementById("dob").value;
 
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-  </script>
+    if (!email || !password || !confirm || !username || !dob) {
+      errorBox.textContent = "⚠️ Пожалуйста, заполните все поля";
+      errorBox.style.display = "block";
+      return;
+    }
+
+    if (password !== confirm) {
+      errorBox.textContent = "🚫 Пароли не совпадают";
+      errorBox.style.display = "block";
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username,
+          firstname,
+          secondname,
+          dob,
+        }
+      }
+    });
+
+    if (error) {
+      errorBox.textContent = `❌ Ошибка: ${error.message}`;
+      errorBox.style.display = "block";
+    } else {
+      document.querySelector(".registration-box").style.display = "none";
+      document.getElementById("success-message").style.display = "block";
+    }
+  });
+
+  // Google login (пока заглушка)
+  document.getElementById("googleRegisterBtn").addEventListener("click", () => {
+    alert("Вход через Google пока отключён.");
+  });
+</script>
 
 
 
