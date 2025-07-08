@@ -114,10 +114,9 @@
   <div class="content">
     <h2>My Account</h2>
     <div class="user-info">
-      <p><i>Name: Alex Smith</i></p>
-      <p><i>Email: alex@example.com</i></p>
-      <p><i>Registered: June 20, 2025</i></p>
-      <p><i>Balance: 25 EUR</i></p>
+      <p><i>Email: <span id="accountEmail">Loading...</span></i></p>
+      <p><i>Registered: <span id="registeredDate">—</span></i></p>
+      <p><i>Balance: <span id="balance">25 EUR</span></i></p>
     </div>
     <div class="purchase-history">
       <p><i>Purchase History:</i></p>
@@ -127,33 +126,47 @@
     <a href="Play5_100.html" class="account-button"><i>Play 5/100</i></a>
   </div>
 
-  <script type="module">
-    // Удалён код Firebase
-    console.log("Firebase-логика удалена. Настройте Supabase для авторизации.");
-
-    // Временная заглушка для отображения пользовательской информации
-    const authButtons = document.getElementById("authButtons");
-    const userInfo = document.getElementById("userInfo");
-    authButtons.style.display = "flex";
-    userInfo.style.display = "none";
-
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      alert("Выход отключён. Настройте Supabase для выхода.");
-    });
-  </script>
-
-
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script>
+  <script type="module">
     const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1bWlobmF6bmt5c2NkZmNqaHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NTc3NDYsImV4cCI6MjA2NzMzMzc0Nn0._K9jfOPU01F4kUT20kIDHdbLdYh7hHUXZdp4Hn7-EIw';
 
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const authButtons = document.getElementById("authButtons");
+    const userInfo = document.getElementById("userInfo");
+    const userEmail = document.getElementById("userEmail");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const accountEmail = document.getElementById("accountEmail");
+    const registeredDate = document.getElementById("registeredDate");
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        authButtons.style.display = "none";
+        userInfo.style.display = "flex";
+        userEmail.textContent = user.email;
+        accountEmail.textContent = user.email;
+        const registered = new Date(user.created_at);
+        registeredDate.textContent = registered.toLocaleDateString(undefined, {
+          year: "numeric", month: "long", day: "numeric"
+        });
+      } else {
+        authButtons.style.display = "flex";
+        userInfo.style.display = "none";
+        accountEmail.textContent = "Not logged in";
+        registeredDate.textContent = "—";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      location.reload();
+    });
   </script>
-
-
-
 
 </body>
 </html>

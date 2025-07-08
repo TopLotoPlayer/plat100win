@@ -59,7 +59,6 @@
       border-radius: 6px;
       text-decoration: none;
       font-weight: bold;
-      display: none;
     }
     #logoutBtn {
       margin-top: 6px;
@@ -168,32 +167,36 @@
     </div>
   </div>
 
-  <script type="module">
-    // Удалён код Firebase
-    console.log("Firebase-логика удалена. Настройте Supabase для авторизации.");
-
-    // Временная заглушка для отображения пользовательской информации
-    const authButtons = document.getElementById("authButtons");
-    const userInfo = document.getElementById("userInfo");
-    authButtons.style.display = "flex";
-    userInfo.style.display = "none";
-
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      alert("Выход отключён. Настройте Supabase для выхода.");
-    });
-  </script>
-
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script>
+  <script type="module">
     const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1bWlobmF6bmt5c2NkZmNqaHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NTc3NDYsImV4cCI6MjA2NzMzMzc0Nn0._K9jfOPU01F4kUT20kIDHdbLdYh7hHUXZdp4Hn7-EIw';
-
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const authButtons = document.getElementById("authButtons");
+    const userInfo = document.getElementById("userInfo");
+    const userEmail = document.getElementById("userEmail");
+
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        authButtons.style.display = "none";
+        userInfo.style.display = "flex";
+        userEmail.textContent = user.email;
+      } else {
+        authButtons.style.display = "flex";
+        userInfo.style.display = "none";
+      }
+    };
+
+    checkUser();
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      location.reload();
+    });
   </script>
-
-
 
 </body>
 </html>
