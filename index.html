@@ -34,7 +34,8 @@
       font-size: 1.2em;
     }
 
-    .auth-buttons, #userInfo {
+    .auth-buttons,
+    #userInfo {
       background-color: #fff000;
       border-radius: 20px;
       padding: 10px 20px;
@@ -43,6 +44,10 @@
       font-style: italic;
       font-weight: bold;
       align-items: flex-end;
+    }
+
+    #userInfo {
+      display: none;
     }
 
     .auth-buttons a {
@@ -123,7 +128,7 @@
         <a href="logIn.html">LOG IN</a>
         <a href="register4.html">CREATE ACCOUNT</a>
       </div>
-      <div id="userInfo" style="display: none; flex-direction: column; align-items: flex-end;">
+      <div id="userInfo">
         <span id="userEmail"></span>
         <a href="MyAccount1.html" id="myAccountBtn">My Account</a>
         <button id="logoutBtn">Выйти</button>
@@ -153,28 +158,32 @@
       const { data: { session }, error } = await supabase.auth.getSession();
 
       if (error) {
-        console.error("Ошибка при получении сессии:", error.message);
+        console.error("❌ Ошибка при получении сессии:", error.message);
         return;
       }
 
-      if (session && session.user) {
+      if (session?.user) {
+        console.log("🔐 Пользователь авторизован:", session.user.email);
         authButtons.style.display = "none";
         userInfo.style.display = "flex";
         userEmailSpan.textContent = session.user.email;
       } else {
+        console.log("👤 Пользователь не авторизован");
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
       }
     }
 
-    logoutBtn.addEventListener("click", async () => {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Ошибка при выходе:", error.message);
-      } else {
-        location.reload();
-      }
-    });
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          console.error("❌ Ошибка при выходе:", error.message);
+        } else {
+          location.reload();
+        }
+      });
+    }
 
     checkAuth();
   </script>
