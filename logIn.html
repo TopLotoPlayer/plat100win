@@ -116,17 +116,6 @@
       text-align: left;
     }
 
-    .success-message {
-      border: 3px solid black;
-      border-radius: 35px;
-      width: 600px;
-      margin: 40px auto;
-      padding: 30px 40px;
-      background-color: transparent;
-      text-align: center;
-      display: none;
-    }
-
     .account-button {
       display: inline-block;
       padding: 12px 25px;
@@ -186,18 +175,12 @@
     <button id="googleLoginBtn" class="google-button">Войти через Google</button>
   </div>
 
-  <div class="success-message" id="success-message">
-    <h2>Welcome back!</h2>
-    <p>You have successfully logged in.</p>
-    <a href="index.html" class="account-button">Go to main page</a>
-  </div>
-
-  <!-- Supabase only -->
+  <!-- Supabase -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
     const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Вставь свой полный ключ сюда
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1bWlobmF6bmt5c2NkZmNqaHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NTc3NDYsImV4cCI6MjA2NzMzMzc0Nn0._K9jfOPU01F4kUT20kIDHdbLdYh7hHUXZdp4Hn7-EIw';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const errorBox = document.getElementById("error-message");
@@ -216,7 +199,6 @@
       }
 
       if (session?.user) {
-        console.log("🔐 Пользователь авторизован:", session.user.email);
         authButtons.style.display = "none";
         userInfo.style.display = "flex";
 
@@ -224,7 +206,6 @@
         myAccountBtn.textContent = `My Account (${username})`;
         userEmailSpan.textContent = session.user.email;
       } else {
-        console.log("👤 Пользователь не авторизован");
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
       }
@@ -259,9 +240,8 @@
         errorBox.textContent = `❌ Ошибка входа: ${error.message}`;
         errorBox.style.display = "block";
       } else {
-        document.querySelector(".login-box").style.display = "none";
-        document.getElementById("success-message").style.display = "block";
-        checkAuth(); // чтобы сразу показать имя в шапке
+        // Успешный вход — перенаправляем на главную
+        window.location.href = "index.html";
       }
     });
 
