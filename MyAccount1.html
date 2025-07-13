@@ -44,6 +44,22 @@
       font-size: 14px;
       margin: 2px 0;
     }
+    #userInfo {
+      display: none;
+    }
+    #userEmail {
+      margin-bottom: 4px;
+      color: black;
+    }
+    #myAccountBtn {
+      background-color: black;
+      color: #ffe600;
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 4px;
+      font-weight: bold;
+    }
     #logoutBtn {
       margin-top: 6px;
       background: black;
@@ -104,8 +120,9 @@
         <a href="logIn.html">LOG IN</a>
         <a href="register4.html">CREATE ACCOUNT</a>
       </div>
-      <div id="userInfo" style="display: none;">
+      <div id="userInfo">
         <span id="userEmail"></span>
+        <a href="MyAccount1.html" id="myAccountBtn">My Account</a>
         <button id="logoutBtn">Выйти</button>
       </div>
     </div>
@@ -126,46 +143,60 @@
     <a href="Play5_100.html" class="account-button"><i>Play 5/100</i></a>
   </div>
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script type="module">
-    const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1bWlobmF6bmt5c2NkZmNqaHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NTc3NDYsImV4cCI6MjA2NzMzMzc0Nn0._K9jfOPU01F4kUT20kIDHdbLdYh7hHUXZdp4Hn7-EIw';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJI...'; // 💡 Вставь актуальный ключ
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     const authButtons = document.getElementById("authButtons");
     const userInfo = document.getElementById("userInfo");
     const userEmail = document.getElementById("userEmail");
-    const logoutBtn = document.getElementById("logoutBtn");
-
     const accountEmail = document.getElementById("accountEmail");
     const registeredDate = document.getElementById("registeredDate");
+    const myAccountBtn = document.getElementById("myAccountBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+    async function updateUI() {
+      const { data: { session }, error } = await supabase.auth.getSession();
 
-      if (user) {
-        authButtons.style.display = "none";
-        userInfo.style.display = "flex";
+      if (error) {
+        console.error("❌ Ошибка:", error.message);
+        return;
+      }
+
+      if (session?.user) {
+        const user = session.user;
+        const metadata = user.user_metadata;
+        const username = metadata?.username || "My Account";
+
         userEmail.textContent = user.email;
         accountEmail.textContent = user.email;
-        const registered = new Date(user.created_at);
-        registeredDate.textContent = registered.toLocaleDateString(undefined, {
+
+        const regDate = new Date(user.created_at);
+        registeredDate.textContent = regDate.toLocaleDateString(undefined, {
           year: "numeric", month: "long", day: "numeric"
         });
+
+        authButtons.style.display = "none";
+        userInfo.style.display = "flex";
+        myAccountBtn.textContent = `My Account (${username})`;
       } else {
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
         accountEmail.textContent = "Not logged in";
         registeredDate.textContent = "—";
       }
-    });
+    }
 
     logoutBtn.addEventListener("click", async () => {
       await supabase.auth.signOut();
       location.reload();
     });
+
+    updateUI();
   </script>
 
 </body>

@@ -16,7 +16,8 @@
       padding: 10px 20px;
       border-bottom-left-radius: 50px;
       display: flex;
-      gap: 15px;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .navbar a {
@@ -24,6 +25,53 @@
       text-decoration: none;
       font-style: italic;
       font-size: 14px;
+    }
+
+    .auth-buttons,
+    #userInfo {
+      background-color: #ffe600;
+      border-radius: 15px;
+      padding: 6px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-style: italic;
+      font-weight: bold;
+    }
+
+    .auth-buttons a {
+      color: black;
+      text-decoration: none;
+      margin: 2px 0;
+    }
+
+    #userInfo {
+      display: none;
+    }
+
+    #userInfo span {
+      margin-bottom: 4px;
+    }
+
+    #myAccountBtn {
+      margin-top: 4px;
+      background: black;
+      color: #ffe600;
+      padding: 5px 10px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    #logoutBtn {
+      margin-top: 4px;
+      background: black;
+      color: #ffe600;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
     .login-box {
@@ -106,6 +154,17 @@
 
   <div class="navbar">
     <a href="index.html">Home</a>
+    <div id="authArea">
+      <div class="auth-buttons" id="authButtons">
+        <a href="logIn.html">LOG IN</a>
+        <a href="register4.html">CREATE ACCOUNT</a>
+      </div>
+      <div id="userInfo">
+        <span id="userEmail"></span>
+        <a href="MyAccount1.html" id="myAccountBtn">My Account</a>
+        <button id="logoutBtn">Выйти</button>
+      </div>
+    </div>
   </div>
 
   <div class="login-box">
@@ -142,16 +201,47 @@
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const errorBox = document.getElementById("error-message");
+    const authButtons = document.getElementById("authButtons");
+    const userInfo = document.getElementById("userInfo");
+    const userEmailSpan = document.getElementById("userEmail");
+    const myAccountBtn = document.getElementById("myAccountBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    supabase.auth.getSession().then(({ data: { session }, error }) => {
+    async function checkAuth() {
+      const { data: { session }, error } = await supabase.auth.getSession();
+
       if (error) {
-        console.error('❌ Ошибка подключения к Supabase:', error.message);
-      } else if (session) {
-        console.log('✅ Пользователь уже вошёл:', session.user.email);
-      } else {
-        console.log('✅ Supabase подключён. Пользователь не авторизован.');
+        console.error("❌ Ошибка при получении сессии:", error.message);
+        return;
       }
-    });
+
+      if (session?.user) {
+        console.log("🔐 Пользователь авторизован:", session.user.email);
+        authButtons.style.display = "none";
+        userInfo.style.display = "flex";
+
+        const username = session.user.user_metadata?.username || "My Account";
+        myAccountBtn.textContent = `My Account (${username})`;
+        userEmailSpan.textContent = session.user.email;
+      } else {
+        console.log("👤 Пользователь не авторизован");
+        authButtons.style.display = "flex";
+        userInfo.style.display = "none";
+      }
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async () => {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          console.error("❌ Ошибка при выходе:", error.message);
+        } else {
+          location.reload();
+        }
+      });
+    }
+
+    checkAuth();
 
     document.getElementById("loginBtn").addEventListener("click", async () => {
       const email = document.getElementById("email").value.trim();
@@ -171,6 +261,7 @@
       } else {
         document.querySelector(".login-box").style.display = "none";
         document.getElementById("success-message").style.display = "block";
+        checkAuth(); // чтобы сразу показать имя в шапке
       }
     });
 

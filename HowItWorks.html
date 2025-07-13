@@ -47,6 +47,9 @@
       text-align: center;
       margin: 2px 0;
     }
+    #userInfo {
+      display: none;
+    }
     #userInfo span {
       color: black;
       margin-bottom: 4px;
@@ -115,7 +118,7 @@
         <a href="logIn.html">LOG IN</a>
         <a href="register4.html">CREATE ACCOUNT</a>
       </div>
-      <div id="userInfo" style="display: none; flex-direction: column; align-items: flex-end;">
+      <div id="userInfo">
         <span id="userEmail"></span>
         <a href="MyAccount1.html" id="myAccountBtn">My Account</a>
         <button id="logoutBtn">Выйти</button>
@@ -171,27 +174,30 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
     const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1bWlobmF6bmt5c2NkZmNqaHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NTc3NDYsImV4cCI6MjA2NzMzMzc0Nn0._K9jfOPU01F4kUT20kIDHdbLdYh7hHUXZdp4Hn7-EIw';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // вставь полный ключ
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const authButtons = document.getElementById("authButtons");
     const userInfo = document.getElementById("userInfo");
     const userEmailSpan = document.getElementById("userEmail");
+    const myAccountBtn = document.getElementById("myAccountBtn");
     const logoutBtn = document.getElementById("logoutBtn");
 
     async function checkAuth() {
       const { data: { session }, error } = await supabase.auth.getSession();
 
       if (error) {
-        console.error("Ошибка при получении сессии:", error.message);
+        console.error("❌ Ошибка при получении сессии:", error.message);
         return;
       }
 
-      if (session && session.user) {
+      if (session?.user) {
+        const username = session.user.user_metadata?.username || "My Account";
         authButtons.style.display = "none";
         userInfo.style.display = "flex";
         userEmailSpan.textContent = session.user.email;
+        myAccountBtn.textContent = `My Account (${username})`;
       } else {
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
@@ -201,7 +207,7 @@
     logoutBtn.addEventListener("click", async () => {
       const { error } = await supabase.auth.signOut();
       if (error) {
-        console.error("Ошибка при выходе:", error.message);
+        console.error("❌ Ошибка при выходе:", error.message);
       } else {
         location.reload();
       }

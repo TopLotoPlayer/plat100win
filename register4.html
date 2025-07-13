@@ -18,10 +18,17 @@
       gap: 15px;
     }
     .navbar a {
-      color: white;
+      color: #fff;
       text-decoration: none;
       font-style: italic;
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+    .navbar a:hover {
+      background-color: #333;
     }
     .registration-box {
       border: 3px solid black;
@@ -95,6 +102,14 @@
 
   <div class="navbar">
     <a href="index.html">Home</a>
+    <div id="authArea">
+      <div class="auth-buttons" id="authButtons"></div>
+      <div id="userInfo" style="display:none;">
+        <span id="userEmail"></span>
+        <a href="MyAccount1.html" id="myAccountBtn">My Account</a>
+        <button id="logoutBtn">Выйти</button>
+      </div>
+    </div>
   </div>
 
   <div class="registration-box">
@@ -140,17 +155,37 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1bWlobmF6bmt5c2NkZmNqaHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NTc3NDYsImV4cCI6MjA2NzMzMzc0Nn0._K9jfOPU01F4kUT20kIDHdbLdYh7hHUXZdp4Hn7-EIw';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Проверка: есть ли связь и авторизация
-    supabase.auth.getSession().then(({ data: { session }, error }) => {
+    // Функция проверки состояния авторизации
+    async function checkAuth() {
+      const { data: { session }, error } = await supabase.auth.getSession();
       if (error) {
-        console.error('❌ Ошибка подключения:', error.message);
-      } else if (session?.user) {
-        console.log('✅ Пользователь авторизован:', session.user.email);
-      } else {
-        console.log('✅ Supabase подключён. Пользователь не авторизован.');
+        console.error('❌ Ошибка при получении сессии:', error.message);
+        return;
       }
-    });
 
+      const authButtons = document.getElementById("authButtons");
+      const userInfo = document.getElementById("userInfo");
+      const userEmailSpan = document.getElementById("userEmail");
+      const myAccountBtn = document.getElementById("myAccountBtn");
+
+      if (session?.user) {
+        console.log('🔐 Пользователь авторизован:', session.user.email);
+        authButtons.style.display = "none";
+        userInfo.style.display = "flex";
+        userEmailSpan.textContent = session.user.email;
+        const username = session.user.user_metadata?.username || "My Account";
+        myAccountBtn.textContent = `My Account (${username})`;
+      } else {
+        console.log('👤 Пользователь не авторизован');
+        authButtons.style.display = "none"; // Изменено, чтобы не показывать пустой блок
+        userInfo.style.display = "none";
+      }
+    }
+
+    // Вызов проверки при загрузке страницы
+    checkAuth();
+
+    // Обработчик регистрации
     document.getElementById("registerBtn").addEventListener("click", async () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
@@ -204,11 +239,23 @@
       } else {
         document.querySelector(".registration-box").style.display = "none";
         successBox.style.display = "block";
+        // Обновляем состояние после успешной регистрации
+        checkAuth();
       }
     });
 
     document.getElementById("googleRegisterBtn").addEventListener("click", () => {
       alert("🔒 Вход через Google пока не реализован");
+    });
+
+    // Обработчик выхода
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("❌ Ошибка при выходе:", error.message);
+      } else {
+        location.reload();
+      }
     });
   </script>
 
