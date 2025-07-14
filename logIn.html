@@ -148,8 +148,8 @@
         <a href="logIn.html">LOG IN</a>
         <a href="register4.html">CREATE ACCOUNT</a>
       </div>
-      <div id="userInfo">
-        <span id="userEmail"></span>
+      <div id="userInfo" style="display: none;">
+        <span id="userUsername"></span>
         <a href="MyAccount1.html" id="myAccountBtn">My Account</a>
         <button id="logoutBtn">Выйти</button>
       </div>
@@ -186,9 +186,14 @@
     const errorBox = document.getElementById("error-message");
     const authButtons = document.getElementById("authButtons");
     const userInfo = document.getElementById("userInfo");
-    const userEmailSpan = document.getElementById("userEmail");
+    const userUsername = document.getElementById("userUsername"); // Заменено с userEmail
     const myAccountBtn = document.getElementById("myAccountBtn");
     const logoutBtn = document.getElementById("logoutBtn");
+
+    // Обновление UI при изменении состояния авторизации
+    supabase.auth.onAuthStateChange((event, session) => {
+      checkAuth();
+    });
 
     async function checkAuth() {
       const { data: { session }, error } = await supabase.auth.getSession();
@@ -202,9 +207,9 @@
         authButtons.style.display = "none";
         userInfo.style.display = "flex";
 
-        const username = session.user.user_metadata?.username || "My Account";
+        const username = session.user.user_metadata?.username || "Guest";
+        userUsername.textContent = username;
         myAccountBtn.textContent = `My Account (${username})`;
-        userEmailSpan.textContent = session.user.email;
       } else {
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
@@ -240,8 +245,10 @@
         errorBox.textContent = `❌ Ошибка входа: ${error.message}`;
         errorBox.style.display = "block";
       } else {
-        // Успешный вход — перенаправляем на главную
-        window.location.href = "index.html";
+        // Обновляем шапку и остаёмся на странице
+        checkAuth();
+        // Перенаправление на index.html (опционально)
+        // window.location.href = "index.html";
       }
     });
 

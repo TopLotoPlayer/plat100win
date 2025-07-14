@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How It Works</title>
   <style>
     body {
@@ -30,7 +30,8 @@
       text-decoration: none;
       font-size: 1.2em;
     }
-    .auth-buttons, #userInfo {
+    .auth-buttons,
+    #userInfo {
       background-color: #fff000;
       border-radius: 20px;
       padding: 10px 20px;
@@ -118,8 +119,8 @@
         <a href="logIn.html">LOG IN</a>
         <a href="register4.html">CREATE ACCOUNT</a>
       </div>
-      <div id="userInfo">
-        <span id="userEmail"></span>
+      <div id="userInfo" style="display: none;">
+        <span id="userUsername"></span>
         <a href="MyAccount1.html" id="myAccountBtn">My Account</a>
         <button id="logoutBtn">Выйти</button>
       </div>
@@ -154,10 +155,10 @@
     </div>
 
     <div class="example">
-      <strong>Example:</strong><br/>
-      You buy a ticket for 5 €.<br/>
-      29 other users also buy tickets.<br/>
-      The system selects one winner at random.<br/>
+      <strong>Example:</strong><br />
+      You buy a ticket for 5 €.<br />
+      29 other users also buy tickets.<br />
+      The system selects one winner at random.<br />
       That winner receives the 100 € prize.
     </div>
 
@@ -174,15 +175,20 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
     const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // вставь полный ключ
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Вставьте полный ключ
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const authButtons = document.getElementById("authButtons");
     const userInfo = document.getElementById("userInfo");
-    const userEmailSpan = document.getElementById("userEmail");
+    const userUsername = document.getElementById("userUsername"); // Заменено с userEmail
     const myAccountBtn = document.getElementById("myAccountBtn");
     const logoutBtn = document.getElementById("logoutBtn");
+
+    // Обновление UI при изменении состояния авторизации
+    supabase.auth.onAuthStateChange((event, session) => {
+      checkAuth();
+    });
 
     async function checkAuth() {
       const { data: { session }, error } = await supabase.auth.getSession();
@@ -193,10 +199,10 @@
       }
 
       if (session?.user) {
-        const username = session.user.user_metadata?.username || "My Account";
         authButtons.style.display = "none";
         userInfo.style.display = "flex";
-        userEmailSpan.textContent = session.user.email;
+        const username = session.user.user_metadata?.username || "Guest";
+        userUsername.textContent = username;
         myAccountBtn.textContent = `My Account (${username})`;
       } else {
         authButtons.style.display = "flex";

@@ -28,7 +28,8 @@
       font-style: italic;
       font-size: 14px;
     }
-    .auth-buttons, #userInfo {
+    .auth-buttons,
+    #userInfo {
       display: flex;
       flex-direction: column;
       background-color: #ffe600;
@@ -47,7 +48,7 @@
     #userInfo {
       display: none;
     }
-    #userEmail {
+    #userUsername {
       margin-bottom: 4px;
       color: black;
     }
@@ -86,7 +87,8 @@
       font-style: italic;
       margin: 10px 0;
     }
-    .content .user-info, .content .purchase-history {
+    .content .user-info,
+    .content .purchase-history {
       text-align: left;
       margin: 20px 0;
     }
@@ -120,8 +122,8 @@
         <a href="logIn.html">LOG IN</a>
         <a href="register4.html">CREATE ACCOUNT</a>
       </div>
-      <div id="userInfo">
-        <span id="userEmail"></span>
+      <div id="userInfo" style="display: none;">
+        <span id="userUsername"></span>
         <a href="MyAccount1.html" id="myAccountBtn">My Account</a>
         <button id="logoutBtn">Выйти</button>
       </div>
@@ -147,17 +149,22 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
     const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJI...'; // 💡 Вставь актуальный ключ
+    const supabaseKey = 'eyJhbGciOiJI...'; // Вставьте актуальный ключ
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const authButtons = document.getElementById("authButtons");
     const userInfo = document.getElementById("userInfo");
-    const userEmail = document.getElementById("userEmail");
+    const userUsername = document.getElementById("userUsername"); // Заменено с userEmail
     const accountEmail = document.getElementById("accountEmail");
     const registeredDate = document.getElementById("registeredDate");
     const myAccountBtn = document.getElementById("myAccountBtn");
     const logoutBtn = document.getElementById("logoutBtn");
+
+    // Обновление UI при изменении состояния авторизации
+    supabase.auth.onAuthStateChange((event, session) => {
+      updateUI();
+    });
 
     async function updateUI() {
       const { data: { session }, error } = await supabase.auth.getSession();
@@ -170,14 +177,15 @@
       if (session?.user) {
         const user = session.user;
         const metadata = user.user_metadata;
-        const username = metadata?.username || "My Account";
+        const username = metadata?.username || "Guest";
 
-        userEmail.textContent = user.email;
+        userUsername.textContent = username; // Отображаем username в шапке
         accountEmail.textContent = user.email;
-
         const regDate = new Date(user.created_at);
         registeredDate.textContent = regDate.toLocaleDateString(undefined, {
-          year: "numeric", month: "long", day: "numeric"
+          year: "numeric",
+          month: "long",
+          day: "numeric"
         });
 
         authButtons.style.display = "none";
