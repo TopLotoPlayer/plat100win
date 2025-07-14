@@ -146,7 +146,7 @@
     <div id="authArea">
       <div class="auth-buttons" id="authButtons">
         <a href="logIn.html">LOG IN</a>
-        <a href="register.html">CREATE ACCOUNT</a>
+        <a href="register4.html">CREATE ACCOUNT</a> <!-- Исправлено на register4.html -->
       </div>
       <div id="userInfo" style="display: none;">
         <span id="userUsername"></span>
@@ -201,7 +201,7 @@
 
     const authButtons = document.getElementById("authButtons");
     const userInfo = document.getElementById("userInfo");
-    const userUsername = document.getElementById("userUsername"); // Заменено с userEmail
+    const userUsername = document.getElementById("userUsername");
     const myAccountBtn = document.getElementById("myAccountBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const registerBtn = document.getElementById("registerBtn");
@@ -287,7 +287,10 @@
       } else {
         registrationBox.style.display = "none";
         successMessage.style.display = "block";
-        checkAuth(); // Обновляем шапку после регистрации
+        // Попытка обновить сессию и шапку
+        await checkAuth();
+        // Опционально: автоматический редирект после задержки
+        // setTimeout(() => window.location.href = 'success1.html', 2000);
       }
     });
 
