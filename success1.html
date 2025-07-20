@@ -115,7 +115,7 @@
   </div>
 
   <div class="registration-box">
-    <h2>your acc successfuly created</h2>
+    <h2>Registration completed successfully</h2>
     <a href="MyAccount1.html" class="account-button">My Account</a>
   </div>
 
@@ -170,7 +170,7 @@
         userInfo.style.display = "flex";
         const username = session.user.user_metadata?.username || "Guest";
         userUsername.textContent = username;
-        myAccountBtn.textContent = `My Account (${username})`;
+        myAccountBtn.textContent = `My Account`;
       } else {
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
