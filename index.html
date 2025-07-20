@@ -175,7 +175,7 @@
 
         const username = session.user.user_metadata?.username || "Guest";
         userUsername.textContent = username; // Отображается username
-        myAccountBtn.textContent = `My Account (${username})`; // Ссылка с username
+        myAccountBtn.textContent = `My Account`; // Только "My Account" без скобок
       } else {
         console.log("👤 Пользователь не авторизован");
         authButtons.style.display = "flex";

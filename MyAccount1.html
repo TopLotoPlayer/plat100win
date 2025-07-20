@@ -149,7 +149,7 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
     const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJI...'; // Вставьте актуальный ключ
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1bWlobmF6bmt5c2NkZmNqaHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NTc3NDYsImV4cCI6MjA2NzMzMzc0Nn0._K9jfOPU01F4kUT20kIDHdbLdYh7hHUXZdp4Hn7-EIw';
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -190,7 +190,7 @@
 
         authButtons.style.display = "none";
         userInfo.style.display = "flex";
-        myAccountBtn.textContent = `My Account (${username})`;
+        myAccountBtn.textContent = `My Account`; // Только "My Account" без скобок
       } else {
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
