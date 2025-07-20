@@ -115,7 +115,7 @@
   </div>
 
   <div class="registration-box">
-    <h2>Registration completed successfully</h2>
+    <h2>your acc successfuly created</h2>
     <a href="MyAccount1.html" class="account-button">My Account</a>
   </div>
 
@@ -123,7 +123,8 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
     const supabaseUrl = 'https://humihnaznkyscdfcjhrl.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJI...'; // 🔐 вставь свой актуальный ключ
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1bWlobmF6bmt5c2NkZmNqaHJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3NTc3NDYsImV4cCI6MjA2NzMzMzc0Nn0._K9jfOPU01F4kUT20kIDHdbLdYh7hHUXZdp4Hn7-EIw';
+
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const authButtons = document.getElementById("authButtons");
@@ -132,6 +133,7 @@
     const myAccountBtn = document.getElementById("myAccountBtn");
     const logoutBtn = document.getElementById("logoutBtn");
 
+    // Функция для обработки токенов из URL
     async function handleRedirect() {
       const urlParams = new URLSearchParams(window.location.search);
       const accessToken = urlParams.get('access_token');
@@ -150,6 +152,7 @@
       }
     }
 
+    // Обновление UI при изменении состояния авторизации
     supabase.auth.onAuthStateChange((event, session) => {
       checkAuth();
     });
@@ -167,7 +170,7 @@
         userInfo.style.display = "flex";
         const username = session.user.user_metadata?.username || "Guest";
         userUsername.textContent = username;
-        myAccountBtn.textContent = "My Account"; // ✅ Без скобок и повторений
+        myAccountBtn.textContent = `My Account (${username})`;
       } else {
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
@@ -183,6 +186,7 @@
       }
     });
 
+    // Выполняем обработку редиректа при загрузке страницы
     handleRedirect();
     checkAuth();
   </script>
