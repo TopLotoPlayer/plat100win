@@ -209,7 +209,7 @@
 
         const username = session.user.user_metadata?.username || "Guest";
         userUsername.textContent = username;
-        myAccountBtn.textContent = `My Account (${username})`;
+        myAccountBtn.textContent = `My Account`; // Только "My Account" без скобок
       } else {
         authButtons.style.display = "flex";
         userInfo.style.display = "none";
@@ -245,10 +245,8 @@
         errorBox.textContent = `❌ Ошибка входа: ${error.message}`;
         errorBox.style.display = "block";
       } else {
-        // Обновляем шапку и остаёмся на странице
-        checkAuth();
-        // Перенаправление на index.html (опционально)
-        // window.location.href = "index.html";
+        // Перенаправление на index.html после успешного входа
+        window.location.href = "index.html";
       }
     });
 
